@@ -1,21 +1,28 @@
 #
 # Print urls posted to channels or in /msg's to a window named "urls"
 #
-
+use strict;
 use Irssi;
 use POSIX;
 use vars qw($VERSION %IRSSI); 
 
-$VERSION = "1.0";
+$VERSION = "1.1";
 %IRSSI = (
     authors     => "zdleaf",
-    contact     => "leaf@zincldn.co.uk", 
+    contact     => 'leaf@zincldn.co.uk', 
     name        => "urlwindow",
     description => "Print urls to window named \"urls\"",
     license     => "Public Domain",
     url         => "http://irssi.org/",
 );
-		
+
+my $window = Irssi::window_find_name('urls');
+
+if (!$window){
+	$window = Irssi::Windowitem::window_create('urls', 1);
+	$window->set_name('urls');
+}
+
 sub sig_printtext {
     my ($dest, $text, $stripped) = @_;
     
@@ -37,11 +44,5 @@ sub sig_printtext {
     }
 }
 
-$window = Irssi::window_find_name('urls');
-
-if (!$window){
-	$window = Irssi::Windowitem::window_create('urls', 1);
-	$window->set_name('urls');
-	}
 
 Irssi::signal_add('print text', 'sig_printtext');
